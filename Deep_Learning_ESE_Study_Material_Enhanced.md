@@ -131,6 +131,30 @@ L(a,y) = -[y log(a) + (1-y) log(1-a)]
 J = average of all losses
 ```
 
+Meaning of terms:
+
+| Term | Meaning |
+|---|---|
+| `x` | Input feature vector, such as pixel values or numerical features |
+| `w` | Weight vector; decides importance of each feature |
+| `b` | Bias; shifts the decision boundary |
+| `z` | Weighted sum before activation |
+| `a` | Activated output/predicted probability |
+| `y` | Actual class label, usually `0` or `1` |
+| `L` | Loss for one training example |
+| `J` | Cost/average loss over all training examples |
+
+Solved example:
+
+```text
+x = [2, 1], w = [0.3, -0.1], b = 0.2
+z = 0.3(2) + (-0.1)(1) + 0.2
+z = 0.7
+a = sigmoid(0.7) = 1 / (1 + e^-0.7) = 0.668
+```
+
+Interpretation: the model predicts about `66.8%` probability for class `1`.
+
 ### How to Write in Exam
 
 Logistic regression is used for binary classification. It accepts input vector `x`, computes a weighted sum `z = wTx + b`, applies sigmoid activation to produce probability `a`, and compares this with actual class `y` using binary cross-entropy loss. Since it has the same basic components as a neural network, it is considered a simplified/shallow neural network.
@@ -198,6 +222,29 @@ db = dz
 W = W - alpha*dW
 b = b - alpha*db
 ```
+
+Meaning of terms:
+
+| Term | Meaning |
+|---|---|
+| `dz` | Error signal at output before activation update |
+| `dW` | Gradient of loss with respect to weight |
+| `db` | Gradient of loss with respect to bias |
+| `alpha` | Learning rate; controls update step size |
+| `W`, `b` | Current weight and bias parameters |
+
+Solved example:
+
+```text
+a = 0.8, y = 1, x = 2, W = 0.5, b = 0.1, alpha = 0.1
+dz = a - y = 0.8 - 1 = -0.2
+dW = dz*x = -0.2*2 = -0.4
+db = -0.2
+W_new = 0.5 - 0.1(-0.4) = 0.54
+b_new = 0.1 - 0.1(-0.2) = 0.12
+```
+
+Interpretation: because prediction was lower than target, the update increases weight and bias.
 
 ---
 
@@ -407,9 +454,30 @@ W = W - alpha*VdW
 b = b - alpha*Vdb
 ```
 
+Meaning of terms:
+
+| Term | Meaning |
+|---|---|
+| `dW`, `db` | Current gradients of weight and bias |
+| `VdW`, `Vdb` | Moving average of past gradients |
+| `beta` | Momentum hyperparameter, commonly around `0.9` |
+| `alpha` | Learning rate |
+| `W`, `b` | Parameters being updated |
+
 It smooths oscillations and helps faster movement in useful directions.
 
 Example: if normal gradient descent keeps moving left-right while slowly going downward, momentum reduces the left-right oscillation and builds speed in the useful downward direction.
+
+Solved example:
+
+```text
+Previous VdW = 0.2, current dW = 0.6, beta = 0.9
+VdW_new = 0.9(0.2) + (1-0.9)(0.6)
+VdW_new = 0.18 + 0.06 = 0.24
+
+If W = 1.0 and alpha = 0.1:
+W_new = 1.0 - 0.1(0.24) = 0.976
+```
 
 ### RMSProp
 
@@ -490,6 +558,10 @@ flowchart LR
 
 A filter/kernel slides over the input. At each position, element-wise multiplication and summation gives one output value.
 
+Think of a filter as a small window of learnable numbers. When this window moves over an image, it checks whether a certain pattern is present in that small region.
+
+For example, a vertical-edge filter gives a strong value when it sees a sudden left-to-right intensity change. In CNN training, these filter values are not fixed manually; the network learns them to reduce loss.
+
 Filters learn features such as:
 - vertical edges;
 - horizontal edges;
@@ -502,6 +574,24 @@ Vertical edges are useful for detecting boundaries that run from top to bottom, 
 Textures are repeated local patterns, such as rough surface, cloth pattern, or fur-like regions. Color patterns help in RGB images where class information may depend on color.
 
 In deeper CNN layers, simple features combine into complex objects. For example, edges combine into shapes, shapes combine into parts, and parts combine into full objects like faces or vehicles.
+
+Mini example:
+
+```text
+Image patch:       Filter:
+1 2               1 0
+3 4               0 1
+
+Convolution value = 1*1 + 2*0 + 3*0 + 4*1 = 5
+```
+
+This single value becomes one cell in the output feature map.
+
+### Activation in CNN
+
+After convolution, an activation function is applied to introduce non-linearity. Without activation, stacked convolution layers would still behave like a mostly linear transformation.
+
+In simple exam explanation, write that activation helps CNN learn complex image patterns. For example, after detecting edges, activation allows later layers to combine them into shapes and object parts.
 
 ### Padding
 
@@ -527,6 +617,36 @@ Pooling reduces spatial size. Max pooling keeps the maximum value from each wind
 
 For example, `2 x 2` max pooling with stride `2` changes `28 x 28 x 16` into `14 x 14 x 16`. It reduces computation while keeping the strongest feature response in each region.
 
+Mini example:
+
+```text
+2 x 2 region:
+1  3
+2  5
+
+Max pooling output = 5
+```
+
+Pooling makes the model less sensitive to small shifts in the image. If an edge moves slightly, max pooling can still preserve its strongest response.
+
+### Flattening
+
+Flattening converts a 3D feature map into a 1D vector before sending it to the fully connected layer.
+
+Example: a feature map of `7 x 7 x 32` becomes:
+
+```text
+7 * 7 * 32 = 1568 values
+```
+
+Flattening does not learn parameters; it only reshapes the data.
+
+### Fully Connected Output Layer
+
+The fully connected layer uses flattened CNN features to produce final class scores. If there are 10 classes, the final output layer usually has 10 neurons.
+
+Example: for digit classification, the output neurons may represent digits `0` to `9`. The neuron with the highest score becomes the predicted class.
+
 ## 3.5 CNN Formula Box
 
 ```text
@@ -536,6 +656,35 @@ Conv parameters = (f*f*input_depth + 1 bias) * number_of_filters
 Pooling parameters = 0
 Flatten size = height * width * depth
 Dense parameters = (input_units + 1 bias) * output_units
+```
+
+Meaning of terms:
+
+| Term | Meaning |
+|---|---|
+| `n` | Input height/width for square input |
+| `p` | Padding added on each side |
+| `f` | Filter/kernel size |
+| `s` | Stride, or step size of filter movement |
+| `input_depth` | Number of input channels/feature maps |
+| `number_of_filters` | Number of kernels used in the convolution layer |
+| `height`, `width`, `depth` | Dimensions of final feature map |
+| `input_units` | Number of flattened input values entering dense layer |
+| `output_units` | Number of dense-layer neurons/classes |
+| `+1 bias` | One bias value per filter or per dense neuron |
+
+Solved example:
+
+```text
+Input = 32 x 32 x 3
+Conv: f = 5, p = 0, s = 1, filters = 6
+
+Output size = floor((32 + 2(0) - 5)/1) + 1
+Output size = 28
+Output shape = 28 x 28 x 6
+
+Parameters = (5*5*3 + 1) * 6
+Parameters = 456
 ```
 
 ## 3.6 Depth in CNN
@@ -555,6 +704,10 @@ The filter depth must match input depth. For `32 x 32 x 3`, a `5 x 5` filter is 
 
 VGG-16 has 16 weight layers. It uses `3 x 3` convolution filters, stride 1, same padding, and `2 x 2` max pooling. It is easy to use for transfer learning but slow to train because it has many parameters.
 
+Beginner view: VGG-16 is a deep CNN that repeatedly applies small filters to learn image features. Small `3 x 3` filters are stacked many times, so the model can learn complex patterns while keeping each convolution simple.
+
+Example use: if you need image classification and have limited data, you can use VGG-16 as a pre-trained feature extractor and replace its final classifier with your own classes.
+
 ### ResNet and Skip Connection
 
 ResNet uses identity shortcuts/skip connections.
@@ -570,11 +723,21 @@ flowchart LR
 
 The skip connection helps gradients flow through deep networks, reducing vanishing-gradient difficulty and making very deep networks trainable.
 
+Beginner view: in a normal deep network, information must pass through every layer. In ResNet, the original input can skip a few layers and be added later, so useful information and gradients have a shorter path.
+
 **Important 2024-25 answer:** The addition at the end of a residual block is true element-wise addition, not concatenation.
 
 ```text
 addition([1,2], [3,4]) = [4,6]
 not [1,2,3,4]
+```
+
+Solved mini example:
+
+```text
+Input x = [1, 2]
+Main path F(x) = [3, 4]
+Residual output = F(x) + x = [3+1, 4+2] = [4, 6]
 ```
 
 ### 1 x 1 Convolution
@@ -583,11 +746,17 @@ A `1 x 1` convolution changes depth while keeping height and width the same. It 
 
 Example: if input is `64 x 64 x 192` and we apply 32 filters of size `1 x 1`, the output becomes `64 x 64 x 32`. Height and width stay same, but depth is reduced, which lowers later computation.
 
+Beginner view: `1 x 1` convolution looks at one pixel location at a time but combines information across all channels. It is like changing the number of feature maps without changing image size.
+
 ### Inception Network
 
 Inception uses different filter sizes in parallel, allowing the model to capture local and global patterns efficiently.
 
 Small filters capture local details like edges and small textures, while larger filters capture wider context. Inception combines these parallel outputs so the network can learn multiple feature scales at the same time.
+
+Beginner view: instead of choosing only one filter size, Inception tries multiple filter sizes together. This is useful because objects in images can appear at different scales.
+
+Example: a `1 x 1` filter may capture channel information, a `3 x 3` filter may capture local features, and a `5 x 5` filter may capture wider patterns.
 
 ### MobileNet
 
@@ -596,6 +765,10 @@ MobileNet is designed for limited-computation devices. It uses depthwise separab
 - pointwise convolution: combines channels using `1 x 1` convolution.
 
 Depthwise convolution reduces computation by applying one filter per channel instead of mixing all channels at once. Pointwise convolution then combines these channel-wise features, so MobileNet becomes efficient for smartphones and low-resource devices.
+
+Beginner view: normal convolution does filtering and channel mixing together, which is expensive. MobileNet splits this into two cheaper steps, so it can run on mobile and embedded devices.
+
+Example: for an RGB image, depthwise convolution first filters red, green, and blue channels separately. Pointwise convolution then combines the results to form new feature maps.
 
 ### Transfer Learning
 
@@ -625,6 +798,18 @@ Less data is required because the model already knows basic feature extraction. 
 Reduced computation is a benefit because training a large CNN from scratch can take huge time and resources. Transfer learning is most useful when the source and target tasks are related, such as general image classification and medical image classification.
 
 Example: Use a pre-trained image model as feature extractor and replace final classifier for a new set of classes.
+
+Solved exam-style application:
+
+```text
+Task: classify 5 types of flowers with limited images.
+Step 1: Load a pre-trained CNN such as VGG-style feature extractor.
+Step 2: Freeze earlier convolution layers.
+Step 3: Replace final classifier with 5 output neurons.
+Step 4: Train the new classifier on flower images.
+```
+
+This works because early CNN layers already learn general features like edges, shapes, and textures.
 
 ---
 
@@ -665,6 +850,32 @@ Formula:
 h_t = activation(Wxh*x_t + Whh*h_(t-1) + b_h)
 y_t = activation(Why*h_t + b_y)
 ```
+
+Meaning of terms:
+
+| Term | Meaning |
+|---|---|
+| `x_t` | Input at current time step `t` |
+| `h_t` | Hidden state at current time step |
+| `h_(t-1)` | Hidden state from previous time step |
+| `Wxh` | Weight from input to hidden state |
+| `Whh` | Weight from previous hidden state to current hidden state |
+| `Why` | Weight from hidden state to output |
+| `b_h`, `b_y` | Bias terms |
+| `y_t` | Output at current time step |
+
+Solved example:
+
+```text
+x_t = 2, h_(t-1) = 0.5
+Wxh = 0.4, Whh = 0.2, b_h = 0
+
+h_t = tanh(0.4(2) + 0.2(0.5))
+h_t = tanh(0.8 + 0.1)
+h_t = tanh(0.9) = 0.716
+```
+
+Interpretation: current hidden state stores information from both current input and previous memory.
 
 ## 4.3 Types of RNN by Input-Output Pattern
 
@@ -750,6 +961,36 @@ Forget gate example: in a paragraph, once the subject changes, the model may for
 Input gate example: when a new important word appears, such as a person's name in named entity recognition, the input gate allows this new information to enter memory.
 
 Output gate example: at a particular word position, only part of the memory may be needed for prediction, so the output gate controls what is exposed as hidden state.
+
+Important LSTM formula:
+
+```text
+C_t = f_t*C_(t-1) + i_t*C~_t
+h_t = o_t*tanh(C_t)
+```
+
+Meaning of terms:
+
+| Term | Meaning |
+|---|---|
+| `C_t` | New cell state/current long-term memory |
+| `C_(t-1)` | Previous cell state |
+| `f_t` | Forget gate value |
+| `i_t` | Input gate value |
+| `C~_t` | Candidate memory/update |
+| `o_t` | Output gate value |
+| `h_t` | New hidden state |
+
+Solved example:
+
+```text
+C_(t-1) = 0.4, f_t = 0.8, i_t = 0.6, C~_t = 0.5
+C_t = 0.8(0.4) + 0.6(0.5)
+C_t = 0.32 + 0.30 = 0.62
+
+If o_t = 0.7:
+h_t = 0.7*tanh(0.62) = 0.386
+```
 
 ## 4.6 GRU
 
@@ -864,7 +1105,34 @@ weights = softmax(scores)
 output = sum(weights * V)
 ```
 
+Meaning of terms:
+
+| Term | Meaning |
+|---|---|
+| `Q` | Query vector of the current token |
+| `K` | Key vector used for similarity matching |
+| `V` | Value vector carrying information |
+| `Q . K` | Dot product similarity between query and key |
+| `d_k` | Dimension/length of key vector |
+| `sqrt(d_k)` | Scaling factor to keep scores stable |
+| `softmax(scores)` | Converts scores into attention weights |
+| `output` | Weighted combination of value vectors |
+
 Softmax converts scores into attention weights whose sum is 1.
+
+Solved example:
+
+```text
+Q = [2, 1], K = [1, 3], V = [4, 2], d_k = 2
+Q.K = 2(1) + 1(3) = 5
+score = 5 / sqrt(2) = 3.536
+```
+
+Since there is only one key-value pair, softmax weight is `1`, so:
+
+```text
+attention output = [4, 2]
+```
 
 ## 5.4 Multi-Head Attention
 
@@ -961,9 +1229,33 @@ Where:
 - `bh`, `bw`: height and width;
 - `c1, c2, c3`: class probabilities.
 
+Formula terms:
+
+| Term | Meaning |
+|---|---|
+| `Y` | Output vector for one grid cell/anchor |
+| `Pc` | Probability that an object exists |
+| `bx` | x-coordinate of bounding-box center |
+| `by` | y-coordinate of bounding-box center |
+| `bh` | Bounding-box height |
+| `bw` | Bounding-box width |
+| `c1, c2, c3` | Class probabilities |
+
 `Pc` tells whether an object is present in that grid cell or anchor. If `Pc` is low, the predicted box may be ignored.
 
 `bx` and `by` locate the center of the box, while `bh` and `bw` define its size. Class probabilities such as `c1`, `c2`, and `c3` decide whether the object is a pedestrian, car, motorcycle, or another class.
+
+Solved example:
+
+```text
+Y = [0.95, 0.4, 0.6, 0.3, 0.2, 0.1, 0.8, 0.1]
+Pc = 0.95 means object is likely present.
+bx = 0.4, by = 0.6 gives box center.
+bh = 0.3, bw = 0.2 gives box size.
+Class probabilities = [0.1, 0.8, 0.1]
+```
+
+Interpretation: the predicted class is class 2 because `0.8` is highest.
 
 ## 6.2 Sliding Window Algorithm
 
@@ -991,9 +1283,27 @@ IoU measures overlap between predicted and actual bounding boxes.
 IoU = area of intersection / area of union
 ```
 
+Meaning of terms:
+
+| Term | Meaning |
+|---|---|
+| Intersection | Area common to predicted and actual boxes |
+| Union | Total area covered by both boxes together |
+| IoU | Overlap score between `0` and `1` |
+
 Higher IoU means better bounding-box accuracy.
 
 Example: if a predicted car box overlaps strongly with the true car box, IoU will be high. If the predicted box barely covers the object, IoU will be low.
+
+Solved example:
+
+```text
+Intersection area = 40
+Union area = 100
+IoU = 40 / 100 = 0.4
+```
+
+Interpretation: IoU `0.4` means the predicted box has moderate overlap with the actual box.
 
 ## 6.4 Non-Max Suppression
 

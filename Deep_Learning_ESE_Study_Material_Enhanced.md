@@ -60,6 +60,10 @@ Deep learning is useful for complex problems with large unstructured data such a
 | Data need | Can work with smaller data | Usually needs larger data |
 | Computation | Comparatively lower | Higher |
 
+In machine learning, the user usually decides which features are important. For example, in image classification we may manually extract edges, corners, or texture features before giving them to a classifier.
+
+In deep learning, the network learns features automatically. In a CNN, early layers may learn edges, middle layers may learn shapes, and deeper layers may learn object parts such as eyes, wheels, or faces.
+
 **Exam line:** Deep learning is preferred when data is large, complex, and unstructured because it can learn hierarchical features automatically.
 
 ## 1.2 Biological Neuron to Artificial Neuron
@@ -71,6 +75,10 @@ Deep learning is useful for complex problems with large unstructured data such a
 | Synaptic weight | Weight |
 | Cell body | Processing unit |
 | Axon | Output |
+
+The dendrites of a biological neuron receive signals, just like input features enter an artificial neuron. The synapse decides the strength of communication; in ANN this role is played by weights.
+
+The cell body combines incoming signals, similar to calculating `z = wTx + b`. The axon sends the final signal forward, similar to the output activation of an artificial neuron.
 
 ```mermaid
 flowchart LR
@@ -99,6 +107,10 @@ Logistic regression is a shallow neural network because it has:
 - weighted sum calculation;
 - sigmoid activation;
 - output probability.
+
+Input features are the values used for prediction, such as pixel intensity, age, or marks. Weights decide how strongly each feature affects the output, and bias shifts the decision boundary.
+
+The weighted sum is passed through sigmoid, so the output becomes a probability. For example, if output is `0.82`, the model is saying there is an 82% chance that the input belongs to class 1.
 
 It does not have multiple hidden layers, so it is a simplified neural network.
 
@@ -134,6 +146,14 @@ Activation functions introduce non-linearity. Without activation functions, even
 | Sigmoid | 0 to 1 | Binary classification probability |
 | Non-linear activations | Depends on function | Hidden layers for complex patterns |
 
+Unipolar binary activation gives either `0` or `1`, so it is useful when the neuron has to make a hard yes/no decision. For example, if the net input crosses a threshold, the neuron can output `1`; otherwise it outputs `0`.
+
+Bipolar binary activation gives `-1` or `1`. It is useful when outputs must represent two opposite states, such as negative/positive response instead of absent/present response.
+
+Sigmoid converts any real value into the range `0` to `1`. This makes it suitable for binary classification, such as predicting whether an image belongs to class 1 or not.
+
+Non-linear activations in hidden layers allow the network to learn complex patterns. For example, in image recognition, non-linearity helps combine simple edges into curves, shapes, and eventually objects.
+
 ### Choosing Activation Functions
 
 Choose based on:
@@ -142,6 +162,16 @@ Choose based on:
 - gradient behavior;
 - training stability;
 - whether the layer is hidden or output.
+
+Output range means the type of value expected from the layer. If the output must be a probability, sigmoid is a good choice because its output lies between `0` and `1`.
+
+Task type matters because binary classification, multi-class classification, and feature-learning hidden layers need different behavior. For example, logistic regression uses sigmoid at the output for class `0/1` prediction.
+
+Gradient behavior is important because training depends on gradients during backpropagation. If gradients become too small, learning becomes slow, which is why activation choice affects convergence.
+
+Training stability means the activation should help the model train smoothly without exploding or vanishing updates. A stable activation helps weights update in a controlled manner across epochs.
+
+Layer position also matters. Hidden layers generally need non-linear activation for feature learning, while the output layer should match the target, such as sigmoid for binary output.
 
 For binary classification output, sigmoid is suitable because it gives a probability between 0 and 1. Hidden layers need non-linear activation so the network can learn complex relations.
 
@@ -197,6 +227,18 @@ This indicates overfitting because the model has memorized training patterns but
 | Batch normalization | Stabilizes layer activations |
 | Hyperparameter tuning | Finds better model settings |
 
+Data augmentation is useful when the model has limited training examples. For image tasks, rotating, flipping, shifting, or scaling an image creates new variations so the model does not memorize only the original images.
+
+Early stopping watches validation performance while training. If validation loss starts increasing, training is stopped because the model has begun learning training-specific patterns instead of general rules.
+
+L1/L2 regularization discourages overly large weights. A network with smaller controlled weights is usually simpler and less likely to memorize noise in the training data.
+
+Dropout randomly switches off some neurons during training. For example, with dropout rate `0.3`, only 70 out of 100 neurons remain active in a forward pass, forcing the model to avoid dependence on one fixed path.
+
+Batch normalization keeps activations on a stable scale. This helps deeper networks train faster because each layer receives better-conditioned inputs.
+
+Hyperparameter tuning improves generalization by choosing better values for settings like learning rate, dropout rate, batch size, optimizer, and regularization strength.
+
 ## 2.2 Hyperparameter Tuning
 
 Hyperparameters are selected before training. Examples:
@@ -208,6 +250,20 @@ Hyperparameters are selected before training. Examples:
 - epochs;
 - optimizer;
 - regularization parameter.
+
+Learning rate controls step size during weight updates. A very small learning rate can make training slow, while a very large one may overshoot the minimum.
+
+Number of layers and neurons controls model capacity. Too few may underfit; too many may overfit, especially when the dataset is small.
+
+Dropout rate decides how many neurons are randomly disabled during training. For example, dropout `0.3` drops 30% neurons and keeps 70% active.
+
+Batch size decides how many examples are used before one update. Small batches update frequently but noisily, while large batches are more stable but computationally heavier.
+
+Epochs decide how many times the model sees the full training data. Too few epochs may underfit; too many may overfit unless early stopping is used.
+
+Optimizer decides the update rule. SGD is simple but may be slow; Adam can converge faster because it uses adaptive update behavior.
+
+Regularization parameter controls how strongly large weights are penalized. A higher value reduces overfitting but may also make the model too simple.
 
 For poor generalization, tune:
 - dropout rate;
@@ -245,6 +301,12 @@ Cost = Loss + Regularization term
 | L1 | Penalizes absolute weights | Can make weights exactly zero; useful for compression |
 | L2 | Penalizes squared weights | Shrinks weights toward zero; common weight decay |
 | Dropout | Randomly removes neurons during training | Prevents dependence on specific neurons |
+
+L1 regularization is useful when we want some weights to become exactly zero. This can remove less useful features and make the model more compact.
+
+L2 regularization is commonly used to reduce overfitting by shrinking weights smoothly. It is called weight decay because it pushes weights toward smaller values without usually making them exactly zero.
+
+Dropout does not add a penalty to the cost function. Instead, it randomly removes neurons during training, so the network learns multiple robust paths instead of depending on a few neurons.
 
 **Key difference:** L1/L2 modify the cost function using a penalty term. Dropout changes the network structure temporarily during each training iteration.
 
@@ -297,6 +359,12 @@ Important parameters:
 - `beta`: learnable shift;
 - moving mean and moving variance: saved state.
 
+`gamma` allows the network to stretch or compress normalized activations. Without it, normalization may restrict the layer too much, so gamma gives flexibility back to the model.
+
+`beta` shifts the normalized activation values. This is useful because sometimes the best activation distribution does not have to be centered exactly at zero.
+
+Moving mean and moving variance are stored during training and used later during testing/inference. This is needed because at test time the model may receive one example instead of a full mini-batch.
+
 Exam answer:
 Batch normalization improves performance by keeping activations on a stable scale, reducing internal covariate shift, helping gradients flow better, allowing faster convergence, and reducing sensitivity to poor initialization.
 
@@ -311,6 +379,12 @@ Optimizers decide how weights and biases are updated to minimize loss.
 | Batch GD | Entire dataset | Once per epoch | Stable | Slow for large data |
 | SGD | One sample | Very frequent | Faster updates | Noisy path |
 | Mini-batch GD | Small batch | Frequent | Balance of speed/stability | Batch size must be chosen |
+
+Batch gradient descent calculates the gradient using all training examples before updating weights. It gives a stable direction, but for large datasets it is slow because one update needs the whole dataset.
+
+Stochastic gradient descent updates weights after each training example. It can move faster initially, but because each update depends on only one sample, the training path can be noisy.
+
+Mini-batch gradient descent uses a small group of examples for each update. It is widely used in deep learning because it balances the stability of batch GD and the speed of SGD.
 
 ### SGD vs Adam Convergence
 
@@ -335,13 +409,19 @@ b = b - alpha*Vdb
 
 It smooths oscillations and helps faster movement in useful directions.
 
+Example: if normal gradient descent keeps moving left-right while slowly going downward, momentum reduces the left-right oscillation and builds speed in the useful downward direction.
+
 ### RMSProp
 
 RMSProp adapts learning rates using a moving average of squared gradients. It improves convergence stability.
 
+RMSProp is helpful when some parameters receive large gradients and others receive small gradients. It adjusts the update size so training does not become unstable in directions with large gradients.
+
 ### Adam
 
 Adam combines the benefit of momentum and adaptive learning-rate behavior. That is why it often trains faster than plain SGD.
+
+In exam comparison, write that Adam uses past-gradient information and adaptive step sizes, so it can converge faster even with a smaller learning rate such as `0.001`.
 
 ---
 
@@ -358,6 +438,14 @@ Images are converted into numbers before being processed:
 | Feature extraction | Edges, corners, textures, CNN features |
 | Histogram | Frequency distribution of pixel intensities |
 
+Grayscale representation stores one value per pixel, usually showing brightness. For example, a handwritten digit image can be represented as a `28 x 28 x 1` matrix.
+
+RGB representation stores three values per pixel: red, green, and blue. For example, a color image of size `32 x 32` is represented as `32 x 32 x 3`.
+
+Feature extraction means converting raw pixels into meaningful patterns like edges, corners, textures, or CNN-learned features. For example, detecting vertical edges can help recognize object boundaries.
+
+Histogram representation counts how often each pixel intensity appears. It can describe image brightness, contrast, and intensity distribution.
+
 ## 3.2 Image Preprocessing
 
 | Technique | Purpose |
@@ -368,6 +456,18 @@ Images are converted into numbers before being processed:
 | Contrast enhancement | Improves visual distinction |
 | Noise reduction | Removes unwanted noise |
 | Normalization | Brings pixel values to useful range |
+
+Resizing makes all images the same size so they can be processed by the same neural network. For example, every image may be resized to `32 x 32` before CNN training.
+
+Grayscaling converts a color image into one intensity channel. This reduces computation when color is not essential, such as simple digit recognition.
+
+Binarization converts grayscale pixels into black or white using a threshold. For example, pixels above a threshold become white and the rest become black.
+
+Contrast enhancement improves the difference between dark and bright regions. This can make important objects or edges easier to detect.
+
+Noise reduction removes unwanted random variations using smoothing, blurring, or filtering. For example, it can reduce small noisy dots in an image before classification.
+
+Normalization scales pixel values to a common range, often `0` to `1`. This helps the optimizer train more smoothly because features remain on a similar scale.
 
 ## 3.3 Why CNN Instead of Fully Connected NN?
 
@@ -397,9 +497,17 @@ Filters learn features such as:
 - color patterns;
 - complex objects in deeper layers.
 
+Vertical edges are useful for detecting boundaries that run from top to bottom, such as the side of a car or building. Horizontal edges detect top-bottom changes, such as horizon lines or object bases.
+
+Textures are repeated local patterns, such as rough surface, cloth pattern, or fur-like regions. Color patterns help in RGB images where class information may depend on color.
+
+In deeper CNN layers, simple features combine into complex objects. For example, edges combine into shapes, shapes combine into parts, and parts combine into full objects like faces or vehicles.
+
 ### Padding
 
 Padding adds border pixels, usually zeros. It prevents shrinking and preserves edge information.
+
+Without padding, a `6 x 6` image convolved with a `3 x 3` filter becomes `4 x 4`, so repeated convolutions quickly reduce image size. Padding allows the CNN to apply multiple convolutions without losing too much border information.
 
 Same padding:
 
@@ -411,9 +519,13 @@ p = (f - 1) / 2
 
 Stride controls how far the filter moves at each step. Larger stride gives smaller output.
 
+For stride `1`, the filter moves one pixel at a time and captures detailed information. For stride `2`, it skips one position each time, reducing output size and computation.
+
 ### Pooling
 
 Pooling reduces spatial size. Max pooling keeps the maximum value from each window. Pooling does not change depth.
+
+For example, `2 x 2` max pooling with stride `2` changes `28 x 28 x 16` into `14 x 14 x 16`. It reduces computation while keeping the strongest feature response in each region.
 
 ## 3.5 CNN Formula Box
 
@@ -469,15 +581,21 @@ not [1,2,3,4]
 
 A `1 x 1` convolution changes depth while keeping height and width the same. It is used for dimensionality reduction or augmentation.
 
+Example: if input is `64 x 64 x 192` and we apply 32 filters of size `1 x 1`, the output becomes `64 x 64 x 32`. Height and width stay same, but depth is reduced, which lowers later computation.
+
 ### Inception Network
 
 Inception uses different filter sizes in parallel, allowing the model to capture local and global patterns efficiently.
+
+Small filters capture local details like edges and small textures, while larger filters capture wider context. Inception combines these parallel outputs so the network can learn multiple feature scales at the same time.
 
 ### MobileNet
 
 MobileNet is designed for limited-computation devices. It uses depthwise separable convolution:
 - depthwise convolution: filters each input channel separately;
 - pointwise convolution: combines channels using `1 x 1` convolution.
+
+Depthwise convolution reduces computation by applying one filter per channel instead of mixing all channels at once. Pointwise convolution then combines these channel-wise features, so MobileNet becomes efficient for smartphones and low-resource devices.
 
 ### Transfer Learning
 
@@ -490,11 +608,21 @@ Process:
 4. Train classifier on new data.
 5. Fine-tune some earlier layers with smaller learning rate.
 
+Starting with a pre-trained network is useful because early CNN layers already know general features like edges, colors, and shapes. For example, a model trained on a large image dataset can be reused for a smaller image classification task.
+
+Feature-extraction layers are kept because they capture reusable visual patterns. Classifier layers are replaced because the new task may have different classes, such as 10 local object classes instead of the original classes.
+
+Fine-tuning means unfreezing some layers and training them slowly using a smaller learning rate. This adapts the pre-trained model to the new dataset without destroying useful old knowledge.
+
 Benefits:
 - less data required;
 - faster training;
 - reduced computation;
 - useful when new task is related to old task.
+
+Less data is required because the model already knows basic feature extraction. Faster training happens because only the classifier or a few layers need major updating.
+
+Reduced computation is a benefit because training a large CNN from scratch can take huge time and resources. Transfer learning is most useful when the source and target tasks are related, such as general image classification and medical image classification.
 
 Example: Use a pre-trained image model as feature extractor and replace final classifier for a new set of classes.
 
@@ -512,6 +640,10 @@ Examples:
 - stock prices;
 - temperature readings;
 - time-series analysis.
+
+Natural language is sequential because word order changes meaning. For example, "dog bites man" and "man bites dog" contain the same words but have different meanings.
+
+Speech signals are sequential because the order of sounds decides the spoken word. Time-series data such as stock prices or temperature readings depends on previous values to understand trends.
 
 ## 4.2 RNN Architecture
 
@@ -543,6 +675,14 @@ y_t = activation(Why*h_t + b_y)
 | Many-to-one | Sequence input, one output | Sentiment/text classification |
 | Many-to-many | Sequence input, sequence output | Translation, speech recognition |
 
+One-to-one is like a normal neural network where one input gives one output, such as classifying a single image. It does not heavily use sequence memory.
+
+One-to-many takes one input and produces a sequence. Example: image captioning takes one image and generates a sequence of words as caption.
+
+Many-to-one takes a sequence and produces one output. Example: sentiment classification reads a sentence and outputs positive or negative sentiment.
+
+Many-to-many takes a sequence and produces another sequence. Example: machine translation reads an English sentence and outputs a translated sentence in another language.
+
 ## 4.4 Vanishing and Exploding Gradient
 
 In RNN training, gradients pass backward through many time steps. Repeated multiplication can make gradients too small or too large.
@@ -551,6 +691,10 @@ In RNN training, gradients pass backward through many time steps. Repeated multi
 |---|---|---|
 | Vanishing gradient | Gradients become almost zero | Long-term dependencies not learned |
 | Exploding gradient | Gradients become very large | Unstable updates, loss becomes abnormal |
+
+Vanishing gradient happens when gradients repeatedly multiply by small values during backpropagation through time. As a result, earlier time steps receive almost no learning signal, so the model forgets long-term context.
+
+Exploding gradient happens when gradients repeatedly multiply by large values. This causes huge weight updates, unstable training, sudden loss spikes, or invalid values.
 
 ### How to Know Model Has Exploding Gradients?
 
@@ -561,6 +705,8 @@ Signs:
 - model may produce `NaN` values;
 - accuracy fluctuates heavily;
 - gradients have very high magnitude.
+
+A practical exam example: if training loss is decreasing normally for some epochs and then suddenly becomes extremely large or `NaN`, exploding gradients may be the reason. Very large weight updates are another strong signal.
 
 ## 4.5 LSTM
 
@@ -585,6 +731,12 @@ LSTM components:
 - input gate;
 - output gate.
 
+The cell state acts like a memory highway that carries important information across many time steps. It helps LSTM remember long-term dependencies better than a simple RNN.
+
+The hidden state is the current output-like memory passed to the next time step. It contains short-term information useful for immediate prediction.
+
+The forget gate decides which old information should be removed. The input gate decides what new information should be stored, and the output gate decides what part of memory should become the hidden state.
+
 ### Gates
 
 | Gate | Task |
@@ -592,6 +744,12 @@ LSTM components:
 | Forget gate | Decides what previous information to remove |
 | Input gate | Decides how much new information to store |
 | Output gate | Decides how much memory to send as hidden state |
+
+Forget gate example: in a paragraph, once the subject changes, the model may forget older subject-related information. If the forget gate value is close to `0`, old information is removed.
+
+Input gate example: when a new important word appears, such as a person's name in named entity recognition, the input gate allows this new information to enter memory.
+
+Output gate example: at a particular word position, only part of the memory may be needed for prediction, so the output gate controls what is exposed as hidden state.
 
 ## 4.6 GRU
 
@@ -602,6 +760,12 @@ GRU is simpler than LSTM and has fewer parameters.
 | Update gate | Controls how much previous hidden state is carried forward |
 | Reset gate | Controls how much previous state is ignored |
 | Candidate hidden state | New memory candidate |
+
+The update gate works like a memory-retention controller. If the previous context is still useful, the update gate carries more of it forward.
+
+The reset gate decides how much past information should be ignored while forming the new candidate state. This is useful when the sequence enters a new context and old information becomes less relevant.
+
+The candidate hidden state is the proposed new memory formed from current input and selected past information. GRU combines it with old memory based on the update gate.
 
 GRU is faster to train and less prone to overfitting because of fewer parameters.
 
@@ -626,6 +790,12 @@ Applications:
 - speech recognition;
 - question answering.
 
+Machine translation is a classic encoder-decoder example: the encoder reads the source sentence, and the decoder generates the translated sentence. Input and output lengths may be different.
+
+Text summarization reads a long document and generates a shorter summary. Image captioning encodes image features and decodes them into a sequence of words.
+
+Speech recognition encodes audio features and decodes the spoken words. Question answering encodes a question/context and decodes or selects the answer.
+
 ---
 
 # 5. Transformers, Attention, Embeddings, NLP
@@ -639,6 +809,10 @@ Text must be converted into numerical vectors.
 | One-hot encoding | High dimensional, no semantic meaning |
 | Word embeddings | Dense, low dimensional, captures similarity |
 
+One-hot encoding represents each word as a long vector with only one `1` and the rest `0`. It does not show meaning; for example, "cat" and "dog" are treated as completely unrelated even though both are animals.
+
+Word embeddings represent words as dense vectors where similar words have similar representations. For example, "king", "queen", "man", and "woman" can have meaningful relationships in vector space.
+
 Word2Vec and GloVe are embedding methods mentioned in the slides.
 
 ### Static Embedding Limitation
@@ -648,6 +822,8 @@ Static embeddings give the same vector for a word even when meaning changes.
 Example:
 - "Money in the bank grows" -> financial bank.
 - "River bank erodes" -> geographical bank.
+
+In both sentences, a static embedding gives the same vector to "bank", even though the meaning changes. This is a problem for translation, sentiment analysis, and question answering.
 
 Attention creates contextual embeddings, so meaning changes with surrounding words.
 
@@ -674,6 +850,12 @@ This helps transformers capture long-range dependencies because each token can d
 | K | Key: what each token offers for matching |
 | V | Value: information to be passed forward |
 
+Query represents the current word's requirement. For example, the word "bank" may query surrounding words to understand whether it refers to finance or river side.
+
+Key represents the information available from each word for matching. Words like "loan" and "approved" have keys that match the financial sense of "bank".
+
+Value contains the actual information that will be combined after attention weights are calculated. If a word receives high attention weight, more of its value contributes to the final contextual embedding.
+
 Formula:
 
 ```text
@@ -688,6 +870,8 @@ Softmax converts scores into attention weights whose sum is 1.
 
 Multi-head attention runs multiple attention operations in parallel. Different heads can focus on different relationships in the sentence.
 
+One head may focus on nearby grammar relations, while another head may focus on long-distance meaning. For example, in a long sentence, one head can connect a pronoun to the noun it refers to, while another can focus on action words.
+
 ## 5.5 Transformer Block
 
 ```mermaid
@@ -700,6 +884,8 @@ flowchart TD
 
 Transformers process sequences in parallel, unlike RNNs which process step by step.
 
+The attention block allows tokens to exchange context with each other. The feed-forward layer then transforms each token representation independently to make it more useful for prediction.
+
 ## 5.6 BERT
 
 BERT stands for Bidirectional Encoder Representations from Transformers. It is an encoder-only transformer model used for language understanding. It is pre-trained on large unlabeled text and fine-tuned for tasks like:
@@ -707,12 +893,22 @@ BERT stands for Bidirectional Encoder Representations from Transformers. It is a
 - sentiment analysis;
 - named entity recognition.
 
+Question answering uses BERT to understand the question and passage, then locate or generate the likely answer. Sentiment analysis uses BERT to classify text as positive, negative, or neutral.
+
+Named entity recognition identifies names of people, places, months, or organizations. For example, in the sentence "April won the match", BERT can use context to understand that "April" is a person, not a month.
+
 Important terms:
 - CLS token;
 - SEP token;
 - segment encoding;
 - masked language modeling;
 - next sentence prediction.
+
+The CLS token is used as a special representation for classification tasks. For example, in sentiment classification, the final CLS representation can be used to predict positive or negative sentiment.
+
+The SEP token separates two text segments, such as a question and a passage. Segment encoding helps BERT know which token belongs to which sentence or segment.
+
+Masked language modeling trains BERT by hiding some words and asking the model to predict them using context. Next sentence prediction trains it to understand relationships between pairs of sentences.
 
 ## 5.7 Deep Learning in NLP and Text Classification
 
@@ -727,6 +923,14 @@ Models commonly used from the syllabus/decks:
 - encoder-decoder for sequence-to-sequence tasks;
 - transformers/BERT for contextual understanding.
 
+RNN processes text word by word and keeps a hidden state, so it can model word order. It is useful for simple sequence tasks but struggles with very long dependencies.
+
+LSTM improves RNN by using gates and memory cell, so it can remember important words for a longer time. Example: in sentiment analysis, an LSTM can remember a negative word that appears earlier in a sentence.
+
+GRU is similar to LSTM but simpler, with fewer parameters. It is useful when faster training is needed while still handling sequence information.
+
+Encoder-decoder models are used when input and output are both sequences, such as translation or summarization. Transformers and BERT are stronger for contextual understanding because every word can attend to every other word.
+
 ---
 
 # 6. Object Detection
@@ -739,6 +943,12 @@ Models commonly used from the syllabus/decks:
 | Object localization | Class label + one bounding box |
 | Object detection | Multiple objects + multiple bounding boxes + classes |
 
+Image classification answers only "what is in the image?" For example, it may classify the whole image as "car" without saying where the car is.
+
+Object localization answers "what is the object and where is it?" It predicts one class and one bounding box around the object.
+
+Object detection handles multiple objects. For example, in a road image it may detect a car, pedestrian, and motorcycle with separate bounding boxes and class labels.
+
 Object detection output:
 
 ```text
@@ -750,6 +960,10 @@ Where:
 - `bx`, `by`: center of bounding box;
 - `bh`, `bw`: height and width;
 - `c1, c2, c3`: class probabilities.
+
+`Pc` tells whether an object is present in that grid cell or anchor. If `Pc` is low, the predicted box may be ignored.
+
+`bx` and `by` locate the center of the box, while `bh` and `bw` define its size. Class probabilities such as `c1`, `c2`, and `c3` decide whether the object is a pedestrian, car, motorcycle, or another class.
 
 ## 6.2 Sliding Window Algorithm
 
@@ -765,6 +979,10 @@ flowchart TD
 
 Drawback: the window may not exactly match the object, and checking many windows is computationally expensive.
 
+Example: for car detection, a ConvNet is trained on cropped car images. Then a rectangular window slides across a larger road image; each crop is classified as car or not-car.
+
+Different window sizes are needed because objects may appear small or large. This improves detection but increases computation.
+
 ## 6.3 IoU
 
 IoU measures overlap between predicted and actual bounding boxes.
@@ -775,13 +993,19 @@ IoU = area of intersection / area of union
 
 Higher IoU means better bounding-box accuracy.
 
+Example: if a predicted car box overlaps strongly with the true car box, IoU will be high. If the predicted box barely covers the object, IoU will be low.
+
 ## 6.4 Non-Max Suppression
 
 Non-max suppression removes duplicate overlapping predictions by keeping the box with highest confidence and suppressing lower-confidence overlapping boxes.
 
+Example: if three boxes detect the same car, NMS keeps the box with the highest confidence score and removes the others if they overlap too much.
+
 ## 6.5 Anchor Boxes
 
 Anchor boxes allow one grid cell to detect multiple objects or objects with different shapes.
+
+For example, one anchor box can be tall and narrow for pedestrians, while another can be wide for cars. This helps the model specialize in different object shapes.
 
 For two anchor boxes:
 
@@ -798,6 +1022,10 @@ Each object is assigned to the grid cell containing its midpoint and the anchor 
 | Single-stage | Directly predicts boxes and classes | YOLO, CornerNet, CenterNet |
 | Two-stage | Region proposal, then classification/regression | R-CNN, Fast R-CNN, Faster R-CNN, Mask R-CNN |
 
+Single-stage detectors are faster because they predict object boxes and classes in one pass. YOLO is an example where the image is divided into grids and predictions are made directly.
+
+Two-stage detectors first find candidate regions and then classify/refine them. They can be accurate, but they are usually slower because region proposal and classification are separate stages.
+
 ### R-CNN Family
 
 | Model | Key idea | Limitation |
@@ -806,9 +1034,17 @@ Each object is assigned to the grid cell containing its midpoint and the anchor 
 | Fast R-CNN | Shared CNN + RoI pooling | Still depends on region proposals |
 | Faster R-CNN | Region Proposal Network from CNN features | More accurate but time-consuming |
 
+R-CNN generates many region proposals using selective search, then applies CNN feature extraction to each region. This is slow because each proposed region requires separate processing.
+
+Fast R-CNN improves speed by running CNN once on the full image and using RoI pooling for proposed regions. However, it still depends on an external region proposal method.
+
+Faster R-CNN uses a Region Proposal Network to generate proposals directly from CNN features. This makes the process more integrated and trainable end-to-end.
+
 ### YOLO
 
 YOLO divides the image into grids and predicts bounding boxes and class probabilities for each grid cell. It is a single-stage detector.
+
+YOLO is useful for faster object detection because it looks at the image only once. For example, in autonomous driving, speed is important for detecting cars and pedestrians quickly.
 
 ---
 
@@ -817,6 +1053,10 @@ YOLO divides the image into grids and predicts bounding boxes and class probabil
 GAN has two parts:
 - generator;
 - discriminator.
+
+The generator creates fake samples from random noise. For example, in image generation, it tries to create an image that looks similar to real training images.
+
+The discriminator receives real samples and generated samples, then predicts whether each sample is real or fake. It acts like a judge that gives feedback to the generator.
 
 ```mermaid
 flowchart LR
@@ -833,6 +1073,10 @@ flowchart LR
 |---|---|
 | Generator | Produce samples that fool discriminator |
 | Discriminator | Correctly identify real vs generated samples |
+
+The generator is trained to improve fake data quality. If the discriminator says the generated image is fake, the generator updates itself to produce more realistic images next time.
+
+The discriminator is trained like a binary classifier. It learns to output "real" for real samples and "generated" for fake samples.
 
 The discriminator improves by learning to separate real data from generated data. The generator improves by learning to create outputs that the discriminator classifies as real.
 
@@ -1252,6 +1496,26 @@ IoU = intersection / union
 | Transfer learning | Appears in both |
 | GAN | Appears in both |
 
+CNN calculations should be practiced step by step: write the formula, calculate each layer output, mention depth, then calculate parameters. Both question papers contain CNN numerical questions, so this is a scoring area.
+
+Optimizers should be prepared as a comparison answer. Write how GD, SGD, mini-batch, momentum, RMSProp, and Adam differ in update style, speed, stability, and convergence.
+
+Batch normalization should be written with internal covariate shift, mean/variance normalization, gamma-beta scaling, and training benefits. This topic can appear as either theory or short explanation.
+
+Logistic regression and sigmoid should be prepared with formula and numerical practice. A common exam style is to give `x`, `w`, and `b`, then ask for weighted sum and sigmoid output.
+
+Dropout and regularization should be explained as overfitting-control methods. Include examples like dropout `0.3` keeping 70% neurons active and L2 reducing large weights.
+
+RNN/LSTM/gradient problems should be prepared with diagrams. For RNN, explain sequence memory; for LSTM, explain gates; for gradients, write symptoms of vanishing and exploding gradients.
+
+Attention should be prepared with Q, K, V and one numerical. Also explain that attention captures long-range dependency because each token can directly attend to every other token.
+
+Object detection should be prepared by comparing classification, localization, and detection. Add sliding window, IoU, non-max suppression, anchor boxes, and YOLO/R-CNN examples.
+
+Transfer learning should be explained with the pre-trained model workflow: keep feature extractor, replace classifier, train new classifier, and fine-tune if needed.
+
+GAN should be written as generator versus discriminator training. The generator creates fake samples, while the discriminator learns to classify real and generated samples.
+
 ## Diagram Checklist
 
 Practice drawing:
@@ -1268,3 +1532,8 @@ Practice drawing:
 - sliding-window object detection;
 - anchor boxes and bounding box.
 
+For diagrams, label every arrow and component. A simple labelled diagram with 2-3 explanatory lines is better than a complex unlabelled diagram in a theory exam.
+
+For CNN diagrams, show input, convolution, pooling, flattening, fully connected layer, and output classes. For LSTM, show forget gate, input gate, output gate, cell state, and hidden state.
+
+For object detection diagrams, show a bounding box around an object and label `bx`, `by`, `bh`, and `bw`. For anchor boxes, draw two different shapes to show how one grid cell can handle different object shapes.

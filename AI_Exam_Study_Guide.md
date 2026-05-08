@@ -68,12 +68,15 @@ flowchart LR
   - [Unit 4: Logical Agents, Propositional Logic, and First-Order Style Reasoning](#unit-4-logical-agents-propositional-logic-and-first-order-style-reasoning)
   - [Unit 5: Basics of PROLOG and Expert Systems](#unit-5-basics-of-prolog-and-expert-systems)
   - [Unit 6: Planning](#unit-6-planning)
+- [Must-Know Terms Explained](#must-know-terms-explained)
+- [Syllabus Completeness Add-On](#syllabus-completeness-add-on)
 - [2. PYQ Frequency Analysis](#2-pyq-frequency-analysis)
 - [3. Exam Pattern by Syllabus Heading](#3-exam-pattern-by-syllabus-heading)
 - [4. Puzzle and Logic Deep-Dive](#4-puzzle-and-logic-deep-dive)
 - [5. Quick Answer Templates](#5-quick-answer-templates)
 - [6. Practice Drill](#6-practice-drill)
-- [7. Last-Day Revision Checklist](#7-last-day-revision-checklist)
+- [7. Model Question Papers](#7-model-question-papers)
+- [8. Last-Day Revision Checklist](#8-last-day-revision-checklist)
 
 ---
 
@@ -632,6 +635,260 @@ Diagram placeholder: Blocks World goal-stack plan and POP causal links with a th
 ### Must-Know Terms
 
 **Planning**, **STRIPS**, **precondition**, **effect**, **add list**, **delete list**, **progression planning**, **regression planning**, **goal stack planning**, **Blocks World**, **POP**, **least commitment**, **causal link**, **threat**, **promotion**, **demotion**, **planning graph**, **mutex**, **GraphPlan**, **HTN planning**.
+
+---
+
+# Must-Know Terms Explained
+
+Use this as a fast glossary before the exam. Each term has at least one exam-useful line so you can convert it directly into a definition answer.
+
+## Unit 1 Glossary: Agents and Environments
+
+| Term | Exam-ready meaning |
+|---|---|
+| **Agent** | An entity that perceives an environment through sensors and acts on it through actuators. |
+| **Sensor** | A mechanism through which an agent receives information from the environment, such as a camera, keyboard, or speedometer. |
+| **Actuator** | A mechanism through which an agent performs actions, such as a motor, screen display, brake, robotic arm, or gripper. |
+| **Percept** | The input received by an agent at a particular instant through its sensors. |
+| **Percept sequence** | The complete history of percepts received by an agent so far. |
+| **Agent function** | A mathematical mapping from percept histories to actions, written as \(f:P^* \to A\). |
+| **Agent program** | The actual implementation that runs on the architecture and produces actions from percepts. |
+| **Architecture** | The physical or computational platform on which the agent program runs. |
+| **Rational agent** | An agent that chooses the action expected to maximize its performance measure using percept history and built-in knowledge. |
+| **Performance measure** | The objective criterion used to judge whether the agent is successful. |
+| **Autonomy** | The ability of an agent to base its behavior on its own experience rather than only on fixed built-in rules. |
+| **PEAS** | A task specification format: Performance measure, Environment, Actuators, and Sensors. |
+| **Task environment** | The external situation in which the agent operates; its properties strongly influence agent design. |
+| **Fully observable** | The agent’s sensors provide complete access to the relevant state of the environment. |
+| **Partially observable** | The agent receives incomplete or noisy information about the environment. |
+| **Deterministic** | The next state is completely determined by the current state and the action taken. |
+| **Stochastic** | The next state is uncertain even when the current state and action are known. |
+| **Episodic** | Each decision is independent of previous decisions, so one episode does not affect the next. |
+| **Sequential** | Current actions affect future states and future decisions. |
+| **Static** | The environment does not change while the agent is deciding. |
+| **Dynamic** | The environment may change while the agent is deciding. |
+| **Discrete** | The environment has a limited set of distinct states, percepts, or actions. |
+| **Continuous** | State, time, percepts, or actions vary over continuous ranges. |
+| **Single-agent** | Only one agent is considered in the environment. |
+| **Multi-agent** | Multiple agents interact, cooperate, or compete in the environment. |
+| **Simple reflex agent** | An agent that selects actions using condition-action rules based only on the current percept. |
+| **Model-based reflex agent** | An agent that maintains internal state to handle partially observable environments. |
+| **Goal-based agent** | An agent that selects actions based on whether they help achieve a goal. |
+| **Utility-based agent** | An agent that chooses among states/actions using a utility value representing desirability. |
+| **Learning agent** | An agent that improves its behavior from experience using feedback or observed outcomes. |
+
+## Unit 2 Glossary: Uninformed Search
+
+| Term | Exam-ready meaning |
+|---|---|
+| **Initial state** | The starting state of the problem before any action is applied. |
+| **Successor function** | A function that returns legal next states reachable from a current state using available actions. |
+| **Action** | An operation that changes one state into another state. |
+| **Goal test** | A test that checks whether a given state satisfies the goal condition. |
+| **Path cost** | The numerical cost accumulated along a sequence of actions. |
+| **Search tree** | A tree representation of possible action sequences from the initial state. |
+| **Search node** | A node in the search tree, usually storing state, parent, action, depth, and path cost. |
+| **Frontier / OPEN list** | The set of generated but not yet expanded nodes. |
+| **CLOSED list** | The set of nodes or states already expanded. |
+| **Completeness** | A search algorithm is complete if it finds a solution whenever one exists. |
+| **Optimality** | A search algorithm is optimal if it always returns the least-cost solution. |
+| **Branching factor** | The average number of successors generated per node, commonly denoted by \(b\). |
+| **Solution depth** | The depth of the shallowest goal node, often denoted by \(l\) or \(d\). |
+| **Maximum depth** | The deepest level in the search space, often denoted by \(m\). |
+| **BFS** | Breadth-First Search expands the shallowest node first and is optimal for unit step costs. |
+| **DFS** | Depth-First Search expands deepest nodes first and uses low memory but can fail in infinite or cyclic spaces. |
+| **DLS** | Depth-Limited Search is DFS with a fixed depth limit. |
+| **IDS** | Iterative Deepening Search repeatedly applies DLS with increasing depth limits. |
+| **UCS** | Uniform-Cost Search expands the node with the smallest path cost \(g(n)\). |
+| **Bidirectional search** | A search method that searches forward from the start and backward from the goal until frontiers meet. |
+| **Repeated state** | A state reached more than once, which can waste time unless detected and pruned. |
+
+## Unit 3 Glossary: Informed Search, CSP, and Games
+
+| Term | Exam-ready meaning |
+|---|---|
+| **Heuristic** | A problem-specific estimate that guides search toward promising states. |
+| **Heuristic function** | A function \(h(n)\) estimating the cheapest remaining cost from node \(n\) to a goal. |
+| **Greedy Best-First Search** | An informed search that expands the node with the smallest \(h(n)\). |
+| **A\*** | An informed search using \(f(n)=g(n)+h(n)\), combining path cost and heuristic estimate. |
+| **\(g(n)\)** | The actual cost from the start node to node \(n\). |
+| **\(h(n)\)** | The estimated cost from node \(n\) to a goal. |
+| **\(f(n)\)** | The estimated total solution cost through node \(n\), computed as \(g(n)+h(n)\). |
+| **Admissible heuristic** | A heuristic that never overestimates the true remaining cost: \(0 \le h(n) \le h^*(n)\). |
+| **Consistent heuristic** | A heuristic satisfying \(h(n) \le c(n,n') + h(n')\) for every successor \(n'\). |
+| **Dominance** | A heuristic \(h_2\) dominates \(h_1\) if it is always at least as informed while still admissible. |
+| **IDA\*** | Iterative Deepening A* performs depth-first search with increasing \(f\)-cost cutoffs. |
+| **Generate-and-test** | A method that generates candidate solutions and tests whether they satisfy the goal. |
+| **Hill climbing** | A local search method that moves to a better neighboring state based on heuristic value. |
+| **Local maximum/minimum** | A state better than its immediate neighbors but not necessarily globally best. |
+| **Plateau** | A flat region of the search space where neighboring states have the same heuristic value. |
+| **CSP** | A Constraint Satisfaction Problem consists of variables, domains, and constraints. |
+| **Variable** | An unknown item in a CSP that must be assigned a value. |
+| **Domain** | The set of possible values for a CSP variable. |
+| **Constraint** | A rule restricting which combinations of variable assignments are allowed. |
+| **Backtracking** | A depth-first CSP search that undoes assignments when constraints fail. |
+| **MRV / LRV** | A heuristic that selects the variable with the fewest remaining legal values. |
+| **MCV** | Most Constraining Variable selects the variable that constrains the largest number of other variables. |
+| **LCV** | Least Constraining Value chooses the value that removes the fewest options from other variables. |
+| **Forward checking** | A CSP pruning method that removes illegal values from neighbors after an assignment. |
+| **Minimax** | A game-tree algorithm where MAX maximizes utility and MIN minimizes utility. |
+| **Alpha-beta pruning** | A minimax optimization that removes branches that cannot affect the final decision. |
+| **MAX** | The player or node level that chooses the maximum utility value. |
+| **MIN** | The player or node level that chooses the minimum utility value. |
+| **Quiescence** | A stable game position where evaluation is less likely to change abruptly due to immediate tactical moves. |
+| **Waiting for quiescence** | Delaying evaluation until a game position becomes stable enough to evaluate reliably. |
+| **AO\*** | A heuristic search method for AND-OR graphs where solutions may require satisfying multiple subproblems. |
+| **Means-Ends Analysis** | A strategy that compares current state and goal state, then chooses operators that reduce the difference. |
+
+## Unit 4 Glossary: Logic and Knowledge-Based Agents
+
+| Term | Exam-ready meaning |
+|---|---|
+| **Knowledge base** | A collection of logical sentences representing facts and rules. |
+| **Logical agent** | An agent that uses a knowledge base and inference to decide actions. |
+| **Wumpus World** | A grid-world logical-agent example involving gold, pits, Wumpus, stench, and breeze percepts. |
+| **Entailment** | \(KB \models \alpha\) means \(\alpha\) is true in every model where \(KB\) is true. |
+| **Model** | An assignment of truth values that gives meaning to logical symbols. |
+| **Truth-preserving inference** | An inference procedure that derives only conclusions logically entailed by the KB. |
+| **Complete inference** | An inference procedure that can derive every sentence entailed by the KB. |
+| **Propositional symbol** | An atomic statement that is either true or false. |
+| **Literal** | A propositional symbol or its negation. |
+| **Clause** | A disjunction of literals. |
+| **CNF** | Conjunctive Normal Form: a conjunction of clauses. |
+| **DNF** | Disjunctive Normal Form: a disjunction of conjunctions of literals. |
+| **Validity** | A formula is valid if it is true under every possible assignment. |
+| **Satisfiability** | A formula is satisfiable if it is true under at least one assignment. |
+| **Contradiction** | A formula is contradictory or unsatisfiable if it is true under no assignment. |
+| **Resolution** | An inference rule that derives a new clause by eliminating complementary literals. |
+| **Empty clause** | The contradiction derived in resolution, proving unsatisfiability. |
+| **Horn clause** | A clause with at most one positive literal. |
+| **Forward chaining** | Data-driven reasoning that starts from known facts and applies rules to derive conclusions. |
+| **Backward chaining** | Goal-driven reasoning that starts from a query and tries to prove its required subgoals. |
+| **Predicate** | A relation or property used in predicate logic, such as `Student(x)` or `Loves(x,y)`. |
+| **Quantifier** | A logical operator such as universal \(\forall\) or existential \(\exists\). |
+
+## Unit 5 Glossary: PROLOG and Expert Systems
+
+| Term | Exam-ready meaning |
+|---|---|
+| **Expert system** | An AI program that imitates expert decision-making in a specialized domain. |
+| **Inference engine** | The reasoning component that applies rules to facts to reach conclusions. |
+| **Working memory** | The temporary store of facts about the current case or problem instance. |
+| **Explanation facility** | The component that explains how or why a conclusion was reached. |
+| **User interface** | The part through which users enter information and receive advice or conclusions. |
+| **Knowledge acquisition** | The process of obtaining and updating expert knowledge for the system. |
+| **PROLOG fact** | A basic assertion such as `fever(john).` |
+| **PROLOG rule** | A conditional statement such as `flu(X) :- fever(X), cough(X).` |
+| **Query** | A question asked to PROLOG, such as `?- flu(john).` |
+| **Unification** | The process of matching terms by finding variable substitutions. |
+| **PROLOG backtracking** | The process of returning to earlier choice points to try alternative facts or rules. |
+| **assert** | A PROLOG operation for adding a fact/rule dynamically. |
+| **retract** | A PROLOG operation for removing a fact/rule dynamically. |
+| **Rule priority** | A conflict-resolution method used when multiple expert-system rules can fire. |
+
+## Unit 6 Glossary: Planning
+
+| Term | Exam-ready meaning |
+|---|---|
+| **Planning** | Constructing a sequence or partial order of actions that achieves a goal. |
+| **STRIPS** | A planning representation using action schemas with preconditions and effects. |
+| **Precondition** | A condition that must be true before an action can be executed. |
+| **Effect** | A condition made true or false after an action executes. |
+| **Add list** | The positive effects made true by an action. |
+| **Delete list** | The facts made false by an action. |
+| **Progression planning** | Forward state-space planning from initial state to goal. |
+| **Regression planning** | Backward planning from goal conditions to required previous conditions. |
+| **Goal stack planning** | A planning method that uses a stack of goals, subgoals, and actions. |
+| **Blocks World** | A classic planning domain involving stacking and moving blocks. |
+| **POP** | Partial Order Planning, which keeps action ordering flexible until constraints require it. |
+| **Least commitment** | The principle of postponing decisions about order or bindings until necessary. |
+| **Causal link** | A relation showing that one action establishes a condition needed by another action. |
+| **Threat** | An action that may delete a condition protected by a causal link. |
+| **Promotion** | Resolving a threat by ordering the threatening action after the consumer action. |
+| **Demotion** | Resolving a threat by ordering the threatening action before the producer action. |
+| **Planning graph** | A leveled graph of propositions and actions used to constrain planning search. |
+| **Mutex** | A mutual exclusion relation showing that two actions or propositions cannot both hold in a valid plan at a level. |
+| **GraphPlan** | A planning algorithm that grows a planning graph and searches it backward for a valid plan. |
+| **HTN planning** | Hierarchical Task Network planning, where high-level tasks are decomposed into subtasks. |
+| **Conditional planning** | Planning that includes branches for different possible conditions or outcomes. |
+| **Continuous planning** | Planning that continues during execution and adapts when the world changes. |
+
+---
+
+# Syllabus Completeness Add-On
+
+This section fills syllabus topics that are listed in the syllabus but can be easy to miss in revision.
+
+## AO* Algorithm
+
+**AO\*** is used for **AND-OR graphs**. An OR node represents alternative ways to solve a problem: choosing any one child may be enough. An AND node represents decomposition: all required child subproblems must be solved. This matches the syllabus item **AO\* Algorithm** under informed search.
+
+```mermaid
+flowchart TD
+    P["Problem"]
+    P -->|"OR: choose one method"| A["Method A"]
+    P -->|"OR: choose one method"| B["Method B"]
+    A -->|"AND: solve both"| A1["Subproblem A1"]
+    A -->|"AND: solve both"| A2["Subproblem A2"]
+```
+
+Exam writing points:
+
+- Use AO* when the solution is a subgraph, not only a single path.
+- OR nodes select the best alternative.
+- AND nodes require all listed subgoals.
+- Heuristic estimates guide which part of the graph to expand.
+
+## Means-Ends Analysis
+
+**Means-Ends Analysis** reduces the difference between the current state and the goal state. It identifies a difference, selects an operator that can reduce that difference, and then creates subgoals to satisfy the operator’s preconditions.
+
+```mermaid
+flowchart TD
+    C["Current state"] --> D["Compare with goal"]
+    D --> Diff["Find difference"]
+    Diff --> Op["Choose operator to reduce difference"]
+    Op --> Pre{"Preconditions true?"}
+    Pre -->|Yes| Apply["Apply operator"]
+    Pre -->|No| Sub["Create subgoal for preconditions"]
+    Sub --> D
+    Apply --> Goal{"Goal reached?"}
+    Goal -->|No| D
+    Goal -->|Yes| Done["Plan / solution found"]
+```
+
+Exam example: to travel from one place to another, compare current location with destination. If far away, choose operators such as walk, drive, bus, cab, or fly. If the selected operator has preconditions such as having money or being at an airport, those become subgoals.
+
+## Waiting for Quiescence
+
+**Waiting for quiescence** belongs to game playing. If a game position is unstable, a shallow evaluation may be misleading. The idea is to continue search until a relatively stable or **quiescent** position is reached, then apply the evaluation function. In exam terms, write that it avoids evaluating positions during immediate tactical changes.
+
+## PROLOG Representation and Structure
+
+PROLOG represents knowledge using:
+
+- **Facts**: unconditional truths, such as `student(raj).`
+- **Rules**: conditional truths, such as `pass(X) :- study(X), clever(X).`
+- **Queries**: questions to the system, such as `?- pass(raj).`
+
+The structure of a PROLOG program is therefore a knowledge base of facts and rules plus user queries. PROLOG proves queries using unification, backward chaining, and backtracking.
+
+## Conditional and Continuous Planning
+
+**Conditional planning** is used when the agent must prepare for alternative outcomes. It is useful when action effects or observations can vary. The plan branches depending on conditions.
+
+**Continuous planning** means planning continues during execution. If the environment changes or an action has an unexpected result, the agent updates the current state and revises the plan.
+
+```mermaid
+flowchart TD
+    Plan["Initial plan"] --> Exec["Execute action"]
+    Exec --> Obs["Observe result"]
+    Obs --> Expected{"Expected?"}
+    Expected -->|Yes| Continue["Continue plan"]
+    Expected -->|No| Replan["Update state and replan"]
+    Continue --> Exec
+    Replan --> Exec
+```
 
 ---
 
@@ -1328,7 +1585,226 @@ Prove \(R\) using resolution.
 
 ---
 
-# 7. Last-Day Revision Checklist
+# 7. Model Question Papers
+
+These papers stay inside the supplied syllabus. Paper 1 follows the visible PYQ style closely. Paper 2 uses a different but still exam-valid format. Paper 3 is a mixed rapid-revision paper.
+
+## Model Paper 1: PYQ-Style ESE Pattern
+
+**Subject:** Artificial Intelligence  
+**Max Marks:** 60  
+**Time:** 2 Hours  
+**Instructions:** All questions are compulsory. Figures to the right indicate marks. Draw neat diagrams wherever necessary.
+
+### Q1. Agents and Environments
+
+**A.** Consider a smart email filtering agent that checks unread messages and classifies each as spam or non-spam. Identify one sensor, one percept, one actuator, and one action. Also write two mappings of percepts to actions using the idea of an agent function. **[4]**
+
+**B.** Write a PEAS description for an autonomous grocery shelf-stocking robot. Also classify its environment as fully/partially observable, deterministic/stochastic, episodic/sequential, static/dynamic, discrete/continuous, and single-agent/multi-agent. **[6]**
+
+### Q2. Uninformed Search
+
+**A.** Compare BFS, DFS, DLS, and IDS with respect to completeness, optimality, time complexity, and space complexity. **[6]**
+
+**B.** Given the tree below, start at \(A\) and goal is \(G\). List expansion order and path using BFS and DFS. Assume left-to-right expansion. **[4]**
+
+```text
+A -> B, C
+B -> D, E
+C -> F
+D -> none
+E -> G
+F -> G
+```
+
+### Q3. Informed Search and CSP
+
+**A.** Apply A* from \(S\) to \(G\). Show OPEN and CLOSED lists. **[6]**
+
+```text
+Edges:
+S->A:2, S->B:3
+A->C:3
+B->C:1, B->D:3
+C->D:1, C->E:3
+D->F:2
+E->G:2
+F->G:1
+
+Heuristics:
+S:6, A:4, B:4, C:4, D:3.5, E:1, F:1, G:0
+```
+
+**B.** Five guests \(A,B,C,D,E\) must sit in a row. \(A\) cannot sit next to \(B\), \(C\) must sit left of \(D\), \(E\) cannot sit at either end, and \(B\) must sit in an even-numbered seat. Solve using backtracking. **[4]**
+
+### Q4. Logic
+
+**A.** Translate the following into propositional logic. **[4]**
+
+1. If it rains, I will stay at home.
+2. You will qualify only if you work hard.
+3. Birds fly if and only if the sky is clear.
+4. Liron is hungry but happy.
+
+**B.** Let \(P\): student studies, \(Q\): student passes, \(R\): student is happy. Given \(P \to Q\), \(Q \to R\), and \(P\), prove \(R\) using resolution. **[6]**
+
+### Q5. Expert Systems and PROLOG
+
+**A.** Define expert system and explain its major components. **[4]**
+
+**B.** Design a PROLOG-style expert system with at least four rules to diagnose common network connectivity problems. Include one sample query and conclusion. **[6]**
+
+### Q6. Planning and Games
+
+**A.** Write STRIPS operators for `Paint(object, color)` where the robot must hold a brush of the correct color and the effect is to change the color of the object. **[4]**
+
+**B.** Root is MAX. Its three MIN children have terminal values: \(M1: 4,8,2\), \(M2: 7,1,6\), \(M3: 3,5,9\). Compute minimax values and identify alpha-beta pruning opportunities with left-to-right evaluation. **[6]**
+
+---
+
+## Model Paper 2: Application-Oriented Pattern
+
+**Max Marks:** 60  
+**Format:** Answer all questions. Each question tests theory plus application.
+
+### Q1. Agent Design Case Study **[10]**
+
+A hospital medicine-delivery robot must carry medicines from a pharmacy to patient rooms. Write PEAS, classify the environment, and explain whether a simple reflex, model-based, goal-based, utility-based, or learning agent is most suitable.
+
+### Q2. Search Strategy Selection **[10]**
+
+For each problem, choose the most suitable search method from BFS, DFS, UCS, A*, Hill Climbing, or Bidirectional Search. Justify briefly.
+
+1. Maze with equal movement cost.
+2. Road map with different distances.
+3. Route map with straight-line distance heuristic.
+4. Very deep tree with unknown solution depth and unit step cost.
+5. Local optimization where only neighboring states are compared.
+
+### Q3. Heuristic Search Calculation **[10]**
+
+Given:
+
+```text
+Edges:
+A->B:1, A->C:4
+B->D:3, B->E:2
+C->F:2
+D->G:5
+E->G:4
+F->G:3
+
+Heuristics:
+A:6, B:4, C:3, D:4, E:2, F:2, G:0
+```
+
+Apply A*. Show \(g,h,f\), OPEN, CLOSED, and final path.
+
+### Q4. Logic and Chaining **[10]**
+
+Consider rules:
+
+```text
+Clever(x) and Studies(x) -> PassAI(x)
+Lucky(x) and Clever(x) -> PassAI(x)
+VITStudent(x) -> Clever(x)
+VITStudent(Raj)
+Studies(Raj)
+```
+
+Translate into predicate logic and prove `PassAI(Raj)` using forward chaining. Also explain how backward chaining would start from the goal.
+
+### Q5. Expert System Design **[10]**
+
+Design an expert system for laptop troubleshooting. Include components, working memory facts, at least four rules, and explain how rule priority can be handled when multiple rules match.
+
+### Q6. Planning **[10]**
+
+Initial state: `On(B,A)`, `OnTable(A)`, `OnTable(C)`, `Clear(B)`, `Clear(C)`. Goal: `On(C,A)` and `On(B,C)`. Use goal stack planning. State the actions, preconditions, and effects you use.
+
+---
+
+## Model Paper 3: Mixed Revision Pattern
+
+**Max Marks:** 60  
+**Format:** Short answers, procedures, and one design question.
+
+### Section A: Short Answers **[20]**
+
+Answer any ten. Each carries 2 marks.
+
+1. Define rational agent.
+2. What is autonomy in an agent?
+3. State the four components of a well-defined problem.
+4. Why is DFS not complete in infinite-depth spaces?
+5. What is an admissible heuristic?
+6. Define consistent heuristic.
+7. What is a Horn clause?
+8. What is the empty clause in resolution?
+9. Define causal link in POP.
+10. What is a threat in POP?
+11. What is unification in PROLOG?
+12. What is a planning graph?
+
+### Section B: Procedures **[30]**
+
+**B1.** Apply BFS and UCS on the graph below and explain why results differ when edge costs are unequal. Start \(S\), goal \(G\). **[6]**
+
+```text
+S->A:1, S->B:5
+A->G:10
+B->G:1
+```
+
+**B2.** Convert \((P \to Q) \leftrightarrow (\neg P \lor Q)\) using truth-table reasoning or logical equivalence. **[6]**
+
+**B3.** Solve a three-variable CSP: \(X,Y,Z \in \{1,2,3\}\), \(X \ne Y\), \(Y \ne Z\), \(X < Z\). Show backtracking steps. **[6]**
+
+**B4.** Explain minimax and alpha-beta pruning with a two-level game tree. **[6]**
+
+**B5.** Explain GraphPlan using proposition levels, action levels, and mutex relations. **[6]**
+
+### Section C: Design Question **[10]**
+
+Design an AI system for medical diagnosis. Include agent view, PEAS, expert-system components, rule examples, and one limitation or ethical concern.
+
+---
+
+## Answerability Audit
+
+I checked the generated papers against this guide. The table below shows where each question is answerable from the notes and whether any extra content was added.
+
+| Paper | Topic checked | Answerable from guide? | Where covered |
+|---|---|---:|---|
+| Paper 1 Q1 | Agent function, PEAS, environment classification | Yes | Unit 1, Unit 1 Glossary, PEAS table |
+| Paper 1 Q2 | BFS/DFS/DLS/IDS and expansion order | Yes | Unit 2, search comparison tables, Puzzle Type 1 |
+| Paper 1 Q3 | A* and CSP backtracking | Yes | Unit 3, A* flow, CSP flow, solved examples |
+| Paper 1 Q4 | Propositional translation and resolution | Yes | Unit 4, logic conversion table, Puzzle Type 5 |
+| Paper 1 Q5 | Expert system and PROLOG design | Yes | Unit 5, expert-system architecture, design frame |
+| Paper 1 Q6 | STRIPS and minimax | Yes | Unit 6, STRIPS schema, Puzzle Type 4 |
+| Paper 2 Q1 | Choosing agent type | Yes | Unit 1 and glossary |
+| Paper 2 Q2 | Algorithm selection | Yes | Algorithm Selection Map and Unit 2/3 |
+| Paper 2 Q3 | A* calculation | Yes | A* sections and solved examples |
+| Paper 2 Q4 | Predicate logic and chaining | Yes | Unit 4, chaining notes, syllabus add-on |
+| Paper 2 Q5 | Rule priority | Yes | Unit 5 rule-priority table |
+| Paper 2 Q6 | Goal stack planning | Yes | Unit 6 and Puzzle Type 6 |
+| Paper 3 Section A | Definitions | Yes | Must-Know Terms Explained |
+| Paper 3 Section B | Mixed procedures | Yes | Puzzle Deep-Dive, logic, CSP, planning |
+| Paper 3 Section C | Integrated design | Yes | Units 1 and 5 |
+
+### Content Added After Audit
+
+- Added one-line explanations for all must-know terms.
+- Added AO* notes because the syllabus lists AO* but the original guide was thin on it.
+- Added Means-Ends Analysis because it appears in the syllabus and PYQ-style planning/search questions.
+- Added Waiting for Quiescence because the syllabus lists it under game playing.
+- Added PROLOG representation and structure notes for Unit 5.
+- Added conditional and continuous planning notes for Unit 6.
+- Added model question papers that stay within AI3001 syllabus boundaries.
+
+---
+
+# 8. Last-Day Revision Checklist
 
 - Memorize \(f(n)=g(n)+h(n)\), admissibility, and consistency.
 - Practice OPEN/CLOSED list tables for A*.

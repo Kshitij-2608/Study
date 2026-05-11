@@ -220,6 +220,12 @@ Logistic regression has input features, weights, bias, weighted sum, sigmoid act
 
 **Answer:**
 
+Formula:
+
+```text
+Active neurons = total neurons * (1 - dropout rate)
+```
+
 ```text
 Active fraction = 1 - 0.3 = 0.7
 Active neurons = 100 * 0.7 = 70
@@ -233,6 +239,13 @@ So, `70 neurons` are active.
 This indicates overfitting. Improve generalization by tuning dropout rate, L1/L2 regularization strength, learning rate, number of layers, number of neurons, batch size, and epochs. Use early stopping to stop training when validation loss increases. Grid search can test combinations and select the best validation performance.
 
 ## Q2(b). Compute sigmoid output for `x=0.9`, `w=-0.6`, `b=0.2`; then for `w=-0.3`.
+
+Formula:
+
+```text
+z = wx + b
+sigmoid(z) = 1 / (1 + e^-z)
+```
 
 Case 1:
 
@@ -251,6 +264,8 @@ a = sigmoid(-0.07) = 0.4825
 Output increases because the weight becomes less negative.
 
 ## Q2(c). Initial weight `w=0.4`, gradient `-0.1`. Compare learning rates `0.01` and `0.1`.
+
+Formula:
 
 ```text
 w_new = w - eta*gradient
@@ -281,6 +296,14 @@ Pool1: f=2, s=2
 Conv2: k=10, f=5, s=1, p=0
 Pool2: f=2, s=2
 Classes = 10
+```
+
+Formula:
+
+```text
+Output size = floor((n + 2p - f)/s) + 1
+Conv parameters = (f*f*input_depth + 1)*number_of_filters
+FC parameters = (input_units + 1)*output_units
 ```
 
 | Layer | Output shape | Parameters |
@@ -385,6 +408,13 @@ Question: `x = 1.2`, `w = 0.5`, `b = -0.1`. Compute `z` and sigmoid output.
 
 **Answer:**
 
+Formula:
+
+```text
+z = wx + b
+sigmoid(z) = 1 / (1 + e^-z)
+```
+
 ```text
 z = wx + b = 0.5(1.2) - 0.1 = 0.5
 a = sigmoid(0.5) = 0.622
@@ -396,6 +426,12 @@ Question: `w = 0.6`, gradient `dE/dw = 0.25`, learning rate `0.1`. Find updated 
 
 **Answer:**
 
+Formula:
+
+```text
+w_new = w - eta*gradient
+```
+
 ```text
 w_new = w - eta*gradient
 w_new = 0.6 - 0.1(0.25) = 0.575
@@ -406,6 +442,18 @@ w_new = 0.6 - 0.1(0.25) = 0.575
 Question: `x=[1,2]`, `w=[0.2,0.3]`, `b=-0.1`, `y=1`, `alpha=0.05`.
 
 **Answer:**
+
+Formula:
+
+```text
+z = w1x1 + w2x2 + b
+a = sigmoid(z)
+dz = a - y
+dW = dz*x
+db = dz
+w_new = w - alpha*dW
+b_new = b - alpha*db
+```
 
 ```text
 z = 0.2(1) + 0.3(2) - 0.1 = 0.7
@@ -424,6 +472,12 @@ Question: A layer has 120 neurons and dropout rate is 0.25. How many active neur
 
 **Answer:**
 
+Formula:
+
+```text
+Active neurons = total neurons * (1 - dropout rate)
+```
+
 ```text
 Active fraction = 1 - 0.25 = 0.75
 Active neurons = 120*0.75 = 90
@@ -436,6 +490,14 @@ Active neurons = 120*0.75 = 90
 Question: Input `64 x 64 x 3`, Conv `k=16`, `f=3`, `p=1`, `s=1`, then max pool `f=2`, `s=2`.
 
 **Answer:**
+
+Formula:
+
+```text
+Conv/Pool output size = floor((n + 2p - f)/s) + 1
+Conv parameters = (f*f*input_depth + 1)*number_of_filters
+Pooling parameters = 0
+```
 
 ```text
 Conv output size = ((64 + 2 - 3)/1) + 1 = 64
@@ -450,6 +512,13 @@ Question: Input `28 x 28 x 1`, Conv `k=8`, `f=3`, `p=0`, `s=1`.
 
 **Answer:**
 
+Formula:
+
+```text
+Output size = floor((n + 2p - f)/s) + 1
+Conv parameters = (f*f*input_depth + 1)*number_of_filters
+```
+
 ```text
 Output size = ((28 - 3)/1) + 1 = 26
 Output = 26 x 26 x 8
@@ -462,6 +531,14 @@ Question: Input `14 x 14 x 16`, apply `1 x 1` convolution with 32 filters.
 
 **Answer:**
 
+Formula:
+
+```text
+Output size = floor((n + 2p - f)/s) + 1
+Output depth = number of filters
+Conv parameters = (f*f*input_depth + 1)*number_of_filters
+```
+
 ```text
 Output = 14 x 14 x 32
 Params = (1*1*16 + 1)*32 = 544
@@ -472,6 +549,13 @@ Params = (1*1*16 + 1)*32 = 544
 Question: Input `100 x 100 x 3`, Conv `k=10`, `f=7`, `p=0`, `s=2`.
 
 **Answer:**
+
+Formula:
+
+```text
+Output size = floor((n + 2p - f)/s) + 1
+Conv parameters = (f*f*input_depth + 1)*number_of_filters
+```
 
 ```text
 Output size = floor((100 - 7)/2) + 1
@@ -488,6 +572,12 @@ Question: `Wxh=0.4`, `Whh=0.3`, `h0=0`, `x1=1`. Calculate `h1`.
 
 **Answer:**
 
+Formula:
+
+```text
+h_t = tanh(Wxh*x_t + Whh*h_(t-1) + b)
+```
+
 ```text
 h1 = tanh(0.4(1) + 0.3(0))
 h1 = tanh(0.4) = 0.380
@@ -499,6 +589,12 @@ Question: `x1=1`, `x2=0`, `Wxh=0.6`, `Whh=0.5`, `h0=0`.
 
 **Answer:**
 
+Formula:
+
+```text
+h_t = tanh(Wxh*x_t + Whh*h_(t-1) + b)
+```
+
 ```text
 h1 = tanh(0.6(1) + 0.5(0)) = tanh(0.6) = 0.537
 h2 = tanh(0.6(0) + 0.5(0.537)) = tanh(0.2685) = 0.262
@@ -509,6 +605,12 @@ h2 = tanh(0.6(0) + 0.5(0.537)) = tanh(0.2685) = 0.262
 Question: `C_(t-1)=0.7`, `f_t=0.5`, `i_t=0.4`, `C~_t=0.8`. Calculate `C_t`.
 
 **Answer:**
+
+Formula:
+
+```text
+C_t = f_t*C_(t-1) + i_t*C~_t
+```
 
 ```text
 C_t = f_t*C_(t-1) + i_t*C~_t
@@ -531,6 +633,13 @@ Question: `Q=[1,2]`, `K=[3,1]`, `V=[2,5]`, `d_k=2`.
 
 **Answer:**
 
+Formula:
+
+```text
+score = (Q.K) / sqrt(d_k)
+attention output = softmax(score)*V
+```
+
 ```text
 Q.K = 1(3) + 2(1) = 5
 score = 5/sqrt(2) = 3.536
@@ -542,6 +651,13 @@ Only one value, so output = [2,5]
 Question: `Q=[2,0]`, `K=[1,2]`, `V=[4,1]`, `d_k=2`.
 
 **Answer:**
+
+Formula:
+
+```text
+score = (Q.K) / sqrt(d_k)
+attention output = softmax(score)*V
+```
 
 ```text
 Q.K = 2(1) + 0(2) = 2
@@ -555,6 +671,14 @@ Question: `Q=[1,1]`, `K1=[1,0]`, `K2=[0,1]`, `V1=[2,3]`, `V2=[4,1]`, `d_k=2`.
 
 **Answer:**
 
+Formula:
+
+```text
+score_i = (Q.K_i) / sqrt(d_k)
+weights = softmax(scores)
+attention output = sum(weight_i * V_i)
+```
+
 ```text
 s1 = 1/sqrt(2) = 0.707
 s2 = 1/sqrt(2) = 0.707
@@ -567,6 +691,14 @@ output = 0.5[2,3] + 0.5[4,1] = [3,2]
 Question: `Q=[3,1]`; `K1=[1,1]`, `K2=[2,0]`, `K3=[0,2]`; `V1=[1,0]`, `V2=[0,2]`, `V3=[3,1]`; `d_k=2`.
 
 **Answer:**
+
+Formula:
+
+```text
+score_i = (Q.K_i) / sqrt(d_k)
+weights = softmax(scores)
+attention output = sum(weight_i * V_i)
+```
 
 ```text
 s1 = (3+1)/sqrt(2) = 2.828
@@ -718,6 +850,15 @@ FC params = (input_units + 1)*output_units
 
 Calculate layer by layer and remember pooling has zero parameters.
 
+Mini solved revision:
+
+```text
+Input = 28 x 28 x 1, Conv: f=3, p=1, s=1, filters=8
+Output size = floor((28 + 2(1) - 3)/1) + 1 = 28
+Output shape = 28 x 28 x 8
+Conv params = (3*3*1 + 1)*8 = 80
+```
+
 ## P4. Explain batch normalization with diagram.
 
 **Model answer:**  
@@ -737,6 +878,22 @@ SGD updates using one example and is noisy. Mini-batch GD updates using small ba
 
 **Model answer:**  
 Attention computes similarity between query and key, scales it by `sqrt(d_k)`, applies softmax to get weights, and combines value vectors. It helps the model focus on important tokens and capture long-range dependencies.
+
+Formula:
+
+```text
+score = (Q.K) / sqrt(d_k)
+weights = softmax(scores)
+output = sum(weights * V)
+```
+
+Mini solved revision:
+
+```text
+Q=[2,1], K=[1,3], V=[4,2], d_k=2
+score = (2*1 + 1*3)/sqrt(2) = 5/sqrt(2) = 3.536
+Only one V, so output = [4,2]
+```
 
 ## P8. Explain object detection pipeline with sliding window, IoU, NMS, and anchor boxes.
 
